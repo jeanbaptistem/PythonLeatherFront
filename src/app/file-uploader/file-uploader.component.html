@@ -1,0 +1,27 @@
+<div class="container" appFileUploader (fileDropped)="onFileDropped($event)">
+	<input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target.files)" ngf-select ng-model="picFile" />
+	<h3>Déposez vos échantillons de cuir</h3>
+	<h3></h3>
+	<label style="" for="fileDropRef">Parcourir</label>
+</div>
+<div class="form-row text-center">
+  <button type="button" class="btn btn-primary" style="margin-top : 20px" (click)="OnAnalyser()">Analyser</button>
+</div>
+<div class="files-list">
+	<div class="single-file" *ngFor="let file of files; let i = index">
+		<div class="file-icon" style="width: 50px">
+      <img ng-show="picFile[i] != null" ngf-src="picFile[i]">
+    </div>
+		<div class="info">
+			<h4 class="name">
+				{{ file?.name }}
+			</h4>
+			<p class="size">
+				{{ formatBytes(file?.size) }}
+			</p>
+ 		</div>
+
+		<div class="delete" (click)="deleteFile(i)">
+		</div>
+	</div>
+</div>
