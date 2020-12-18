@@ -1,6 +1,4 @@
 export interface Image {
-
   name : string;
-  binary : string;
-
+  binary_img : string;
 }

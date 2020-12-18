@@ -7,7 +7,7 @@ import { StatisticsComponent } from './statistics/statistics.component'
 const appRoutes: Routes = [
   { path: 'home', component: FileUploaderComponent },
   { path: 'statistics', component: StatisticsComponent },
-  { path: '', component : FileUploaderComponent }
+  { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 
 @NgModule({

@@ -1,69 +1,75 @@
 import { Component, OnInit } from '@angular/core';
+import { FileUploader } from 'ng2-file-upload';
+
+
+const url = "http://localhost:8000/images"
+
+const HEADERS = [{ name: "Access-Control-Allow-Credentials", value: "true" },
+{ name: "Access-Control-Allow-Headers", value: "Origin, X-Requested-With, Content-Type, Accept" },
+{ name: "Access-Control-Allow-Methods", value: "GET,PUT,POST,DELETE" }]
 
 @Component({
   selector: 'app-file-uploader',
   templateUrl: './file-uploader.component.html',
   styleUrls: ['./file-uploader.component.scss']
 })
-export class FileUploaderComponent implements OnInit {
+export class FileUploaderComponent {
 
-  constructor() { }
+  uploader: FileUploader;
+  hasBaseDropZoneOver: boolean;
+  hasAnotherDropZoneOver: boolean;
+  response: string;
 
-  ngOnInit(): void {
+  constructor() {
+    this.uploader = new FileUploader({
+      url,
+      disableMultipart: true, // 'DisableMultipart' must be 'true' for formatDataFunction to be called.
+      formatDataFunctionIsAsync: true,
+      headers: HEADERS,
+      additionalParameter: { withCredentials: true },
+      formatDataFunction: async (item) => {
+        return new Promise((resolve, reject) => {
+          resolve({
+            name: item._file.name,
+            length: item._file.size,
+            contentType: item._file.type,
+            date: new Date()
+          });
+        });
+      }
+    });
+
+    this.hasBaseDropZoneOver = false;
+    this.hasAnotherDropZoneOver = false;
+
+    this.response = '';
+
+    this.uploader.response.subscribe(res => {
+      this.response = res;
+      console.log(res)
+    });
   }
 
-  files: any[] = [];
-
-  /**
-   * on file drop handler
-   */
-  onFileDropped($event) {
-    this.prepareFilesList($event);
+  public fileOverBase(e: any): void {
+    this.hasBaseDropZoneOver = e;
   }
 
-  /**
-   * handle file from browsing
-   */
-  fileBrowseHandler(files) {
-    this.prepareFilesList(files);
+  public fileOverAnother(e: any): void {
+    this.hasAnotherDropZoneOver = e;
   }
 
-  /**
-   * Delete file from files list
-   * @param index (File index)
-   */
-  deleteFile(index: number) {
-    this.files.splice(index, 1);
-  }
-
-  prepareFilesList(files: Array<any>) {
-    for (const item of files) {
-      this.files.push(item);
-    }
-  }
-
-  /**
-   * format bytes
-   * @param bytes (File size in bytes)
-   * @param decimals (Decimals point)
-   */
-  formatBytes(bytes, decimals) {
-    if (bytes === 0) {
-      return '0 Bytes';
-    }
-    const k = 1024;
-    const dm = decimals <= 0 ? 0 : decimals || 2;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-  }
-
-  OnAnalyser() {
-    //Ici Envoyer les fichiers avec la requete post
+  uploadAll() {
+    console.log(this.uploader.queue)
   }
 
 
+  uploadItem(item: File) {
+    item.arrayBuffer().then(buffer => {
+      let array = new Uint8Array(buffer);
+      let binaryString = String.fromCharCode.apply(null, array);
+    })
 
 
+  }
 
 }

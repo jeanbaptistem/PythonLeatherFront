@@ -8,6 +8,7 @@ import { FileUploaderDirective } from './file-uploader.directive';
 import { StatisticsComponent } from './statistics/statistics.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { HttpClientModule } from '@angular/common/http';
+import { FileUploadModule } from 'ng2-file-upload'
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { HttpClientModule } from '@angular/common/http';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FileUploadModule
   ],
   providers: [],
   bootstrap: [AppComponent]

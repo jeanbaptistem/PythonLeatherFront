@@ -8,10 +8,9 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
-
 export class ApiService {
 
-  API_URL = 'http://localhost/api';
+  API_URL = 'http://localhost:8080';
 
   constructor(private http: HttpClient) { }
 
@@ -19,12 +18,8 @@ export class ApiService {
     return this.http.get<Statistics[]>(`${this.API_URL}/statistics/`);
   }
 
-
-
-  //public postImage():
-
-  postImage(body: any): Observable<Image[]> {
-     return this.http.post<Image[]>(`${this.API_URL}/rcnn_results/`, body);
-}
+  public postImage(body: Image): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/images`, body);
+  }
 
 }
